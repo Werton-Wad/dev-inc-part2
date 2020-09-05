@@ -10,17 +10,17 @@ function createCompletedTask(task) {
     const $title = document.createElement('h5');
     $title.classList.add('mb-1');
     $title.style.color = task.color;
-    $title.textContent = `${task.title}`; // title
+    $title.textContent = `${task.title}`;
     const $wrapperPriorityAndDate = document.createElement('div');
     const $priority = document.createElement('small');
     $priority.classList.add('mr-2');
     $priority.textContent = `${task.priority}`
     const $date = document.createElement('small');
-    $date.textContent = `${task.date}`; // date
+    $date.textContent = `${task.date}`;
     const $description = document.createElement('p');
     $description.className = 'mb-1 w-100';
     $description.style.color = task.color;
-    $description.textContent = `${task.description}`; // description
+    $description.textContent = `${task.description}`;
     const $buttonsWrapper = document.createElement('div');
     $buttonsWrapper.className = 'dropdown m-2 dropleft';
     const $dropdownMenuItem1 = document.createElement('button');
@@ -36,18 +36,6 @@ function createCompletedTask(task) {
     const $dropdownMenu = document.createElement('div');
     $dropdownMenu.className = 'dropdown-menu p-2 flex-column';
     $dropdownMenu.setAttribute('aria-labelledby', 'dropdownMenuItem1');
-
-    // buttons
-    // const $btnComplete = document.createElement('button');
-    // $btnComplete.type = 'button';
-    // $btnComplete.className = 'btn btn-success w-100';
-    // $btnComplete.textContent = 'Complete';
-    // $btnComplete.onclick = () => actions.completeTask(task);
-
-    // const $btnEdit = document.createElement('button');
-    // $btnEdit.type = 'button';
-    // $btnEdit.className = 'btn btn-info w-100 my-2';
-    // $btnEdit.textContent = 'Edit';
 
     const $btnDelete = document.createElement('button');
     $btnDelete.type = 'button';
