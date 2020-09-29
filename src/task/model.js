@@ -1,54 +1,70 @@
 import { utilis } from '../utilis';
 import toLocalStorage from '../localStorage';
 
-let tasks = [];
-let id = 1;
-let completedTasks = [];
-
-
-if (localStorage.getItem('tasks')) {
-    tasks = JSON.parse(localStorage.getItem('tasks'));
+const state = {
+    tasks: [],
+    completedTasks: [],
+}
+if (localStorage.getItem('toDo')) {
+    state.tasks = JSON.parse(localStorage.getItem('toDo'));
+}
+if (localStorage.getItem('completed')) {
+    state.completedTasks = JSON.parse(localStorage.getItem('completed'));
 }
 
-function getTasks() {
-    return tasks;
+function getTasks(type) {
+    switch(type) {
+        case 'toDo':
+            return state.tasks;
+        case 'completed':
+            return state.completedTasks;
+        default:
+            return [...state.tasks, ...state.completedTasks];
+    }
 }
 
 function addTask(task) {
-    tasks.push({ ...task, id: id });
-    id++;
-    toLocalStorage(tasks);
-    return tasks;
+    state.tasks.push({ ...task });
+    toLocalStorage('toDo', state.tasks);
+    return state.tasks;
 }
 
-function getTask(id) {
-    let task = tasks.find(task => task.id === id);
-    return task;
+function getTask(id, type) {
+    let tasks = [];
+    switch (type) {
+        case 'toDo':
+            tasks = state.tasks;
+            break;
+        case 'completed':
+            tasks = state.completedTasks;
+            break;
+        default:
+            tasks = [...state.tasks, ...state.completedTasks];
+    }
+    return tasks.find(task => task.id === id);
 }
-
 function editTask(id, editedTask) {
-    tasks = tasks.map(task => {
+    state.tasks = state.tasks.map(task => {
         return task.id !== id ? task : editedTask
     });
-    toLocalStorage(tasks);
-    return tasks;
+    toLocalStorage('toDo', state.tasks);
+    return state.tasks;
 }
-
-function deleteTask(id) {
-    tasks = tasks.filter(task => task.id !== id);
-    toLocalStorage(tasks);
-    return tasks;
+function deleteTask(id, type) {
+    if (type === 'toDo') {
+        state.tasks = state.tasks.filter(task => task.id !== id);
+        toLocalStorage(type, state.tasks);
+        return state.tasks;
+    } else if (type === 'completed') {
+        state.completedTasks = state.completedTasks.filter(task => task.id !== id);
+        toLocalStorage(type, state.completedTasks);
+        return state.completedTasks;
+    }
 }
-
-function deleteCompletedTask(id) {
-    completedTasks = completedTasks.filter(task => task.id !== id);
-    return completedTasks;
-}
-
 
 function sortTasks(value) {
     let flag = (value === 'Z') ? 1 : -1;
-    let sortedTasks = [...tasks].sort((a, b) => {
+    let sortedTasks = [...state.tasks].sort((a, b) => {
         if (utilis.getDate(a.date) < utilis.getDate(b.date)) {
             return 1 * flag;
         } else {
@@ -59,8 +75,9 @@ function sortTasks(value) {
 }
 
 function completeTask(task) {
-    completedTasks.push(task);
-    return completedTasks;
+    state.completedTasks.push(task);
+    toLocalStorage('completed', state.completedTasks);
+    return state.completedTasks;
 }
 
 const taskModel = {
@@ -69,7 +86,6 @@ const taskModel = {
     deleteTask,
     getTask,
     completeTask,
-    deleteCompletedTask,
     editTask,
     sortTasks,
 };

@@ -2,7 +2,10 @@ import actions from '../controller';
 
 function createCompletedTask(task) {
     const $wrapper = document.createElement('li');
-    $wrapper.className = 'list-group-item d-flex w-100 mb-2';
+    $wrapper.className = 'list-group-item d-flex w-100 mb-2 completed-tasks';
+    $wrapper.style.cursor = 'move';
+    $wrapper.draggable = true;
+    $wrapper.dataset.draggableId = task.id;
     const $wrapperTextContent = document.createElement('div');
     $wrapperTextContent.className = 'w-100 mr-2';
     const $wrapperTextContentContainer = document.createElement('div');
@@ -36,12 +39,20 @@ function createCompletedTask(task) {
     const $dropdownMenu = document.createElement('div');
     $dropdownMenu.className = 'dropdown-menu p-2 flex-column';
     $dropdownMenu.setAttribute('aria-labelledby', 'dropdownMenuItem1');
-
+    $wrapper.addEventListener('dragstart', function(e) {
+        e.target.classList.add('selected');
+        console.log(e.target.dataset.draggableId);
+        e.dataTransfer.setData('srcIdCompleted', e.target.dataset.draggableId);
+        
+    });
+    $wrapper.addEventListener('dragend', function(e) {
+        e.target.classList.remove('selected');
+    });
     const $btnDelete = document.createElement('button');
     $btnDelete.type = 'button';
     $btnDelete.className = 'btn btn-danger w-100';
     $btnDelete.textContent = 'Delete';
-    $btnDelete.onclick = () => actions.deleteCompletedTask(task.id);
+    $btnDelete.onclick = () => actions.deleteTask(task.id, 'completed');
 
     $wrapperPriorityAndDate.append($priority, $date);
     $wrapperTextContentContainer.append($title, $wrapperPriorityAndDate);

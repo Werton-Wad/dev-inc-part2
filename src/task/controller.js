@@ -4,53 +4,50 @@ import { utilis } from '../utilis';
 import { view } from './view';
 
 function init() {
-    const savedTasks = JSON.parse(localStorage.getItem('tasks'));
-    if (savedTasks && savedTasks.length) {
-        renders.renderTasks(savedTasks);
+    const savedToDoTasks = JSON.parse(localStorage.getItem('toDo'));
+    const savedCompletedTasks = JSON.parse(localStorage.getItem('completed'));
+    if (savedToDoTasks && savedToDoTasks.length) {
+        renders.renderTasks(savedToDoTasks);
+    }
+    if (savedCompletedTasks && savedCompletedTasks.length) {
+        renders.renderCompletedTasks(savedCompletedTasks);
     }
     view();
   }
 
 function createTask(e) {
     e.preventDefault();
-    const { inputTitle, inputText, gridRadios, inputColor } = e.target.elements;
+    const { inputTitle, inputText, gridRadios } = e.target.elements;
     const newTask = {
+        id: utilis.setId(),
         title: inputTitle.value,
         description: inputText.value,
         priority: gridRadios.value,
         date: utilis.convertDate(new Date()),
-        color: inputColor.value,
+        color: utilis.setColor(gridRadios.value),
     };
     const updatedTasks = taskModel.addTask(newTask);
     renders.renderTasks(updatedTasks);             
     e.target.reset(); 
 }
 
-function deleteTask(id) {
-    const updatedTasks = taskModel.deleteTask(id);
-    renders.renderTasks(updatedTasks);
-}
-
-function completeTask(task) {
-    deleteTask(task.id);
-    const completedTasks = taskModel.completeTask(task);
+function completeTask(id) {
+    const finedTask = taskModel.getTask(id, 'toDo');
+    deleteTask(id, 'toDo');
+    const completedTasks = taskModel.completeTask(finedTask);
     renders.renderCompletedTasks(completedTasks);
-}
-
-function deleteCompletedTask(id) {
-    const updatedTasks = taskModel.deleteCompletedTask(id);
-    renders.renderCompletedTasks(updatedTasks);
 }
 
 function editTask(e, id) {
     e.preventDefault();
-    const { inputEditTitle, inputEditText, gridRadios, inputEditColor } = e.target.elements;
+    const { inputEditTitle, inputEditText, gridRadios } = e.target.elements;
     const newTask = {
+        id: id,
         title: inputEditTitle.value,
         description: inputEditText.value,
         priority: gridRadios.value,
         date: utilis.convertDate(new Date()) + ' (edited)',
-        color: inputEditColor.value,
+        color: utilis.setColor(gridRadios.value),
     };
     const updatedTasks = taskModel.editTask(id, newTask); 
     renders.renderTasks(updatedTasks);
@@ -62,16 +59,38 @@ function sortTasks(value) {
     renders.renderTasks(sortedTasks);
 }
 
+function getTasks(type) {
+    return taskModel.getTasks(type);
+}
 
+function dropCompletedTasks(id) {
+    const task = taskModel.getTask(id, 'completed');
+    const updatedTasks = taskModel.addTask(task);
+    deleteTask(id, 'completed');
+    renders.renderTasks(updatedTasks);
+}
+
+function deleteTask(id, type) {
+    const updatedTasks = taskModel.deleteTask(id, type);
+    switch(type) {
+        case 'toDo':
+            renders.renderTasks(updatedTasks);
+            break;
+        case 'completed':
+            renders.renderCompletedTasks(updatedTasks);
+            break;
+    }
+}
 
 const actions = {
     init,
     createTask,
     deleteTask,
     completeTask,
-    deleteCompletedTask,
     editTask,
     sortTasks,
+    getTasks,
+    dropCompletedTasks,
 };
 
 export default actions;

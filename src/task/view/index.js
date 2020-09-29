@@ -2,6 +2,7 @@ import createTask from './task-component';
 import actions from '../controller';
 import createCompletedTask from './completedTask-component';
 import theme from '../../dark-mode';
+import { dragAndDrop } from './draggable-tasks';
 
 const $bodyForList = document.createElement('ul');
 $bodyForList.className = 'list-group flex-wrap justify-content-between';
@@ -17,9 +18,7 @@ export function view() {
     const $addForm = document.querySelector('form');
     const $btnSortNew = document.getElementById('btn-sort-new');
     const $btnSortOld = document.getElementById('btn-sort-old');
-    const $themeMenu = document.querySelector('#theme-menu');
-    const $btnDarkModeEnabled = $themeMenu.children[0];
-    const $btnDarkModeDisabled = $themeMenu.children[1];
+    const $toggledThemeBtn = document.getElementById('toggle-theme');
 
     $addForm.onsubmit = function (e) {
         actions.createTask(e);
@@ -29,11 +28,20 @@ export function view() {
     $btnSortNew.onclick = () => actions.sortTasks('Z');
     $btnSortOld.onclick = () => actions.sortTasks('A');
 
-    $btnDarkModeEnabled.onclick = theme.enabledDarkMode;
-    $btnDarkModeDisabled.onclick = theme.disabledDarkMode;
-
-    $btnDarkModeEnabled.onclick = theme.enabledDarkMode;
-    $btnDarkModeDisabled.onclick = theme.disabledDarkMode;
+    $toggledThemeBtn.onchange = function () {
+        let darkMode = localStorage.getItem('darkMode');
+        darkMode === 'enabled' ? theme.disabledDarkMode() : theme.enabledDarkMode();
+    }
+    $titleCompleted.addEventListener('dragover', dragAndDrop.handleDragOver);
+    $titleCompleted.addEventListener('dragleave', dragAndDrop.handleDragLeave);
+    $titleCompleted.addEventListener('drop', function (e) {
+        dragAndDrop.handleDrop(e, 'srcId');
+    });
+    $titleToDO.addEventListener('dragover', dragAndDrop.handleDragOver);
+    $titleToDO.addEventListener('dragleave', dragAndDrop.handleDragLeave);
+    $titleToDO.addEventListener('drop', function(e) {
+        dragAndDrop.handleDrop(e, 'srcIdCompleted')
+    });
 }
 
 function renderCompletedTasks(tasks) {

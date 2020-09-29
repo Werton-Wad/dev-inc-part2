@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
     <link rel="stylesheet" href="./LogicPart_files/bootstrap.min.css">
     <script src="./LogicPart_files/aa7a31f950.js"></script>
     <link rel="stylesheet" href="./LogicPart_files/free.min.css" media="all">
@@ -22,6 +22,9 @@
             background: black;
             color: #CD72B7;
         }
+        .selected {
+            border-color: #007BFF;
+        }
     </style>
     <title>LogicPart</title>
 </head>
@@ -30,6 +33,9 @@
     <div class="container-fluid wrapper">
         <nav class="navbar navbar-light bg-light">
             <h1>MyToDoList</h1>
+            <!-- <div>
+                <input type="checkbox" checked data-toggle="toggle" data-onstyle="primary" data-offstyle="secondary">
+            </div> -->
             <div class="d-flex">
                 <button type="button" id="btn-sort-new" class="btn btn-primary mx-2"><i
                         class="fas fa-sort-numeric-up-alt" aria-hidden="true"></i></button>
@@ -49,9 +55,10 @@
                     <div class="dropdown-menu p-2 dropdown-menu-right" id="theme-menu"
                         aria-labelledby="dropdownMenuSettings">
                         <!-- You should add settings here -->
-                        <a class="dropdown-item" href="#">Enabled darkmode</a>
-                        <a class="dropdown-item" href="#">Diabled darkmode</a>
+                        <a class="dropdown-item" href="#">Setting 1</a>
+                        <a class="dropdown-item" href="#">Setting 2</a>
                     </div>
+                    <input id="toggle-theme" type="checkbox" checked data-toggle="toggle" data-onstyle="outline-primary" data-offstyle="outline-secondary">
                 </div>
             </div>
         </nav>
@@ -114,12 +121,6 @@
                             <label for="inputText" class="col-sm-2 col-form-label">Text</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="inputText" placeholder="Text" required="">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputColor" class="col-sm-2 col-form-label">Color</label>
-                            <div class="col-sm-10">
-                                <input type="color" class="form-control" id="inputColor">
                             </div>
                         </div>
                         <fieldset class="form-group">
@@ -188,12 +189,6 @@
                                     required="">
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label for="inputEditColor" class="col-sm-2 col-form-label">Color</label>
-                            <div class="col-sm-10">
-                                <input type="color" class="form-control" id="inputEditColor">
-                            </div>
-                        </div>
                         <fieldset class="form-group">
                             <div class="row">
                                 <legend class="col-form-label col-sm-2 pt-0">Priority</legend>
@@ -234,6 +229,7 @@
         </div>
     </div>
     <script src="./LogicPart_files/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
     <script src="./LogicPart_files/popper.min.js"></script>
     <script src="./LogicPart_files/bootstrap.min.js"></script>
 

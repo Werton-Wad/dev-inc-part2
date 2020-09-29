@@ -2,9 +2,20 @@ import actions from '../controller';
 import editForm from './editForm';
 
 function createTask(task) {
-    console.log(task.color)
     const $wrapper = document.createElement('li');
-    $wrapper.className = 'list-group-item d-flex w-100 mb-2';
+    $wrapper.dataset.draggableId = task.id;
+    $wrapper.className = 'list-group-item d-flex w-100 mb-2 item-to-Do';
+    const $completedTasksWrapper = document.getElementById('completedTasks');
+    const $completedTasksTitle = document.getElementById('completed');
+    $wrapper.style.cursor = 'move';
+    $wrapper.draggable = true;
+    $wrapper.addEventListener('dragstart', function(e) {
+        e.target.classList.add('selected');
+        e.dataTransfer.setData('srcId', e.target.dataset.draggableId);
+    });
+    $wrapper.addEventListener('dragend', function(e) {
+        e.target.classList.remove('selected');
+    });
     const $wrapperTextContent = document.createElement('div');
     $wrapperTextContent.className = 'w-100 mr-2';
     const $wrapperTextContentContainer = document.createElement('div');
@@ -43,7 +54,7 @@ function createTask(task) {
     $btnComplete.type = 'button';
     $btnComplete.className = 'btn btn-success w-100';
     $btnComplete.textContent = 'Complete';
-    $btnComplete.onclick = () => actions.completeTask(task);
+    $btnComplete.onclick = () => actions.completeTask(task.id);
 
     const $btnEdit = document.createElement('button');
     $btnEdit.type = 'button';
@@ -56,7 +67,7 @@ function createTask(task) {
     $btnDelete.type = 'button';
     $btnDelete.className = 'btn btn-danger w-100';
     $btnDelete.textContent = 'Delete';
-    $btnDelete.onclick = () => actions.deleteTask(task.id);
+    $btnDelete.onclick = () => actions.deleteTask(task.id, 'toDo');
 
     $wrapperPriorityAndDate.append($priority, $date);
     $wrapperTextContentContainer.append($title, $wrapperPriorityAndDate);
@@ -66,7 +77,6 @@ function createTask(task) {
 
     $buttonsWrapper.append($dropdownMenuItem1, $dropdownMenu);
     $wrapper.append($wrapperTextContent, $buttonsWrapper);
-    
     return $wrapper;
 }
 

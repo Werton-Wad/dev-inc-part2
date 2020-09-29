@@ -1,3 +1,23 @@
+let id = 1;
+
+function setId() {
+    return id++;
+}
+
+
+function setColor(value) {
+    switch (value) {
+        case 'Low': 
+            return '#008000';
+        case 'Medium':
+            return '#ffff00';
+        case 'High':
+            return '#ff0000';
+        default:
+            return '000';
+    }
+}
+
 
 function convertDate(date) {
     let day = date.getDate();
@@ -18,6 +38,8 @@ function getDate(date) {
 }
 
 export const utilis = {
+    setId: setId,
     convertDate: convertDate,
     getDate: getDate,
+    setColor: setColor,
 }

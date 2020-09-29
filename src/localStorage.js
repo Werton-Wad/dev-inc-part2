@@ -1,5 +1,5 @@
-function toLocalStorage(tasks) {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+function toLocalStorage(type, tasks) {
+    localStorage.setItem(type, JSON.stringify(tasks));
 }
 
 export default toLocalStorage;
